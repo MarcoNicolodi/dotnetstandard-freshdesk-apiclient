@@ -11,64 +11,11 @@ using Freshdesk.Infrastructure;
 
 namespace Freshdesk.Repository
 {
-    public class TicketRepository : IRepository<Ticket>
+    public class TicketRepository : BaseRepository<Ticket>,  IRepository<Ticket>
     {
-        private readonly IBaseApiClient _client;
-        private readonly string baseUri = "tickets";
-
-        public TicketRepository(IBaseApiClient client)
+        public TicketRepository(IBaseApiClient client) : base("tickets", client)
         {
-            _client = client;
         }
-
-        public async Task<List<Ticket>> Get()
-        {
-            var resultStream = _client.Get(baseUri);
-            var serializer = new DataContractJsonSerializer(typeof(List<Ticket>));
-            return serializer.ReadObject(await resultStream) as List<Ticket>;
-        }
-
-        public async Task<Ticket> Get(int id)
-        {
-            var resultStream = _client.Get($"{baseUri}/{id}");
-            //var reader = new StreamReader(await resultStream);
-            //var text = reader.ReadToEnd();
-
-            var serializer = new DataContractJsonSerializer(typeof(Ticket));
-            
-            return serializer.ReadObject(await resultStream) as Ticket;
-        }
-
-        public async Task<Ticket> Post(Ticket entity)
-        {
-            var serializer = new DataContractJsonSerializer(typeof(Ticket));
-            
-            var stream = new MemoryStream();
-            serializer.WriteObject(stream, entity);
-            stream.Position = 0;
-            var streamReader = new StreamReader(stream);
-            var json = streamReader.ReadToEnd();
-            var encoding = new UTF8Encoding();
-            var buffer = encoding.GetBytes(json);
-            var byteContent = new ByteArrayContent(buffer);
-            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            var resultStream = await _client.Post(baseUri, byteContent);           
-            resultStream.Position = 0;
-            
-            return serializer.ReadObject(resultStream) as Ticket;
-        }
-
-        public void Update(Ticket entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task Delete(int id)
-        {
-            await _client.Delete($"tickets/{id}");
-        }
-
-
 
         // public async Task<string> GetOne()
         // {

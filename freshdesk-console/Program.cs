@@ -10,11 +10,10 @@ namespace Freshdesk.Console
     {
         public static void Main(string[] args)
         {
-            var ticketRepository = new TicketRepository(new BaseApiClient("qualyteam", "OWrhYypp8Tg9hTUZc2uN"));
-            Task.FromResult(ticketRepository.Delete(45158));
+            var ticketRepository = new TicketRepository(new BaseApiClient("dotnetapiclient", "sddBnfd6ZOeXytWWVXGD"));
+            //Task.FromResult(ticketRepository.Delete(45158));            
             
-            
-            //var oneTicket = ticketRepository.Get(45152).Result;
+            var oneTicket = ticketRepository.Get(3).Result;
             // var allTickets = ticketRepository.Get().Result;
 
             // var ticket = new Ticket();

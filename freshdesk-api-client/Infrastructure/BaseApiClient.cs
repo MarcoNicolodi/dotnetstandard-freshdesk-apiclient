@@ -68,8 +68,9 @@ namespace Freshdesk.Http
             var finalUrl = MountCallFullUrl(uri);
             
             var response =  await client.PostAsync(finalUrl, content);
-            if(!response.IsSuccessStatusCode){
+            if(!response.IsSuccessStatusCode){                
                 var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Freshdesk api returned and {response.StatusCode} status code with following error: {error}");
             }
             var stream = new MemoryStream();
             stream.Position = 0;
@@ -81,9 +82,28 @@ namespace Freshdesk.Http
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json")
+            );
             client.DefaultRequestHeaders.Add("Authorization", MountAuthorizationHeaderValue());
             var finalUrl = MountCallFullUrl(uri);
             await client.DeleteAsync(finalUrl);
+        }
+
+        public async Task<Stream> Put(string uri, HttpContent content)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Add("Authorization", MountAuthorizationHeaderValue());
+            var finalUrl = MountCallFullUrl(uri);
+            var response = await client.PutAsync(finalUrl, content);
+            if(!response.IsSuccessStatusCode) {
+
+            }
+            var stream = new MemoryStream();
+            stream.Position = 0;
+            await response.Content.CopyToAsync(stream);
+            return stream;
         }
 
         

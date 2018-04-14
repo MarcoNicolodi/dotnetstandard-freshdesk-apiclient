@@ -11,6 +11,7 @@ namespace Freshdesk.Infrastructure
         string ApiKey { get; set; }
         Task<Stream> Get(string url);
         Task<Stream> Post(string url, HttpContent content);
+        Task<Stream> Put(string url, HttpContent content);
         Task Delete(string url);
     }
 }
