@@ -17,7 +17,18 @@ namespace Freshdesk.Console
             filters.Add("filter", "new_and_my_open");
             var tickets = ticketRepository.Get(filters).Result;
             // var allTickets = ticketRepository.Get().Result;
+            var contactRepository = new ContactRepository(new BaseApiClient("dotnetapiclient", "sddBnfd6ZOeXytWWVXGD"));
+            var contacts = contactRepository.Get(null).Result;
 
+            var contact = new Contact(){
+                Name = "Contato teste",
+                Address = "Rua teste",
+                Email = "teste2@teste.com.br",
+                JobTitle = "Web developer"
+            };
+
+            var insertedContact = contactRepository.Post(contact).Result;
+            
             // var ticket = new Ticket();
             // ticket.Description = "dotnet standard cachorro";
             // ticket.Subject = "beiramar falou osama sou eu";
