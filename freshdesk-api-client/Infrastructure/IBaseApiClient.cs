@@ -9,7 +9,7 @@ namespace Freshdesk.Infrastructure
     {
         string CompanyDomain { get; set; }
         string ApiKey { get; set; }
-        Task<Stream> Get(string url);
+        Task<Stream> Get(string url, string queryString);
         Task<Stream> Post(string url, HttpContent content);
         Task<Stream> Put(string url, HttpContent content);
         Task Delete(string url);

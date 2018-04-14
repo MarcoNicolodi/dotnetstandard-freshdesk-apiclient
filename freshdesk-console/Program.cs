@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Freshdesk.Entity;
 using Freshdesk.Http;
@@ -12,8 +13,9 @@ namespace Freshdesk.Console
         {
             var ticketRepository = new TicketRepository(new BaseApiClient("dotnetapiclient", "sddBnfd6ZOeXytWWVXGD"));
             //Task.FromResult(ticketRepository.Delete(45158));            
-            
-            var oneTicket = ticketRepository.Get(3).Result;
+            var filters = new Dictionary<string, string>();
+            filters.Add("filter", "new_and_my_open");
+            var tickets = ticketRepository.Get(filters).Result;
             // var allTickets = ticketRepository.Get().Result;
 
             // var ticket = new Ticket();
@@ -25,8 +27,6 @@ namespace Freshdesk.Console
             // ticket.GroupId = 35000205192;
             // ticket.Type = "Bug Cliente";
             // var responseTicket = ticketRepository.Post(ticket).Result;
-
-
         }
     }
 }

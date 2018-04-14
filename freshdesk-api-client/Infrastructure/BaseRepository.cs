@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Freshdesk.Infrastructure {
     public abstract class BaseRepository<T> : IRepository<T>  where T : class {
@@ -22,16 +23,16 @@ namespace Freshdesk.Infrastructure {
             await _apiClient.Delete($"{_resourceUri}/{id}");
         }
 
-        public async Task<List<T>> Get()
+        public async Task<List<T>> Get(Dictionary<string, string> queryString)
         {
-            var resultStream = _apiClient.Get(_resourceUri);
+            var resultStream = _apiClient.Get(_resourceUri, queryString != null ? new QueryBuilder(queryString).ToString() : null);
             var serializer = new DataContractJsonSerializer(typeof(List<T>));
             return serializer.ReadObject(await resultStream) as List<T>;
         }
 
-        public async Task<T> Get(int id)
+        public async Task<T> Get(int id, Dictionary<string, string> queryString = null)
         {
-            var resultStream = _apiClient.Get($"{_resourceUri}/{id}");
+            var resultStream = _apiClient.Get($"{_resourceUri}/{id}", queryString != null ? new QueryBuilder(queryString).ToString() : null);
             var serializer = new DataContractJsonSerializer(typeof(T));            
             return serializer.ReadObject(await resultStream) as T;
         }

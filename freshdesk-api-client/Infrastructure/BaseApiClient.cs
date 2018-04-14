@@ -26,12 +26,12 @@ namespace Freshdesk.Http
             return $"Basic {authInfo}";
         }
 
-        private string MountCallFullUrl(string uri)
+        private string MountCallFullUrl(string uri, string queryString = null)
         {
-            return $"https://{CompanyDomain}.freshdesk.com/api/{ApiVersion}/{uri}";
+            return $"https://{CompanyDomain}.freshdesk.com/api/{ApiVersion}/{uri}{queryString}";
         }
 
-        public async Task<Stream> Get()
+        public async Task<Stream> Get(string uri, string queryString)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
@@ -39,20 +39,7 @@ namespace Freshdesk.Http
                 new MediaTypeWithQualityHeaderValue("application/json")
             );
             client.DefaultRequestHeaders.Add("Authorization", MountAuthorizationHeaderValue());
-            var finalUrl = MountCallFullUrl(null);
-
-            return await client.GetStreamAsync(finalUrl);
-        }
-
-        public async Task<Stream> Get(string uri)
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json")
-            );
-            client.DefaultRequestHeaders.Add("Authorization", MountAuthorizationHeaderValue());
-            var finalUrl = MountCallFullUrl(uri);
+            var finalUrl = MountCallFullUrl(uri, queryString);
 
             return await client.GetStreamAsync(finalUrl);
         }
@@ -80,7 +67,7 @@ namespace Freshdesk.Http
 
         public async Task Delete(string uri)
         {
-            var client = new HttpClient();
+            var client = new HttpClient();            
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json")
